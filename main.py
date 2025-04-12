@@ -1,9 +1,13 @@
-from tqdm import tqdm
+import asyncio
+
+import uvicorn
 
 
-def main():
-    print("Hello from map-plot!")
+async def main():
+    config = uvicorn.Config("src.api:app", host="0.0.0.0", port=8080, log_level="info", reload=True)
+    server = uvicorn.Server(config)
+    await server.serve()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

@@ -3,7 +3,7 @@ from textwrap import dedent
 import svg
 from tqdm import tqdm
 
-from map_api import way_details_from_name
+from src.map_api import way_details_from_name
 
 
 def latlon_to_point(lat, lon, min_lat, max_lat, min_lon, max_lon, width, height) -> tuple[int, int]:
@@ -12,7 +12,7 @@ def latlon_to_point(lat, lon, min_lat, max_lat, min_lon, max_lon, width, height)
     return x, y
 
 
-def render(name: str, width: int, height: int):
+def render(name: str, width: int, height: int) -> svg.SVG:
     origin, data = way_details_from_name(name)
 
     elements = [
@@ -60,8 +60,14 @@ def render(name: str, width: int, height: int):
     elements.append(svg.Text(x=x - 20, y=y + 20, class_=["small"], text=origin.name, fill="red"))
     doc = svg.SVG(width=width, height=height, elements=elements)
 
-    filename = f"{name}.svg"
+    return doc
+
+
+def to_svg(doc: svg.SVG, filename: str) -> str:
     with open(filename, "w") as f:
         f.write(str(doc))
+    return str(doc)
 
-    print(f"SVG map saved as {filename}!")
+
+if __name__ == "__main__":
+    to_svg(render("Ceintuurbaan 364", 2400, 1800), "ceintuurbaan.svg")
