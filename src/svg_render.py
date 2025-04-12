@@ -65,10 +65,3 @@ def render(name: str, width: int, height: int):
         f.write(str(doc))
 
     print(f"SVG map saved as {filename}!")
-
-
-if __name__ == "__main__":
-    render("Ceintuurbaan 364", 2400, 1800)
-    render("Vrolikstraat 186", 2400, 1800)
-    render("R. David Campista, 1250 - Afonso Pena, São José dos Pinhais - PR, 83045-060, Brazil", 2400, 1800)
-    render("Rua Alberto Folloni, 359", 2400, 1800)
