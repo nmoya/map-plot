@@ -84,6 +84,13 @@ def lat_long_by_name(name: str) -> LatLong:
     )
 
 
+def map_automplete(name: str) -> list[dict]:
+    nominatim = Nominatim()
+    result = nominatim.query(name).toJSON()
+
+    return result
+
+
 def way_details_from_name(origin: str) -> tuple[LatLong, OSMData]:
     lat_long = lat_long_by_name(origin)
     query = f"""

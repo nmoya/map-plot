@@ -54,8 +54,9 @@
                         <form action="/" method="POST">
                             <div class="field">
                                 <div class="control">
-                                    <input class="input is-medium" type="text" name="text"
-                                        placeholder="Enter your text here" required>
+                                    <input class="input is-medium" type="text" name="text" id="text-input"
+                                        list="suggestions" placeholder="Enter your text here" required>
+                                    <datalist id="suggestions"></datalist>
                                 </div>
                             </div>
                             <div class="field">
@@ -91,5 +92,42 @@
             {% endif %}
         </section>
     </body>
+    <script>
+        const input = document.getElementById('text-input');
+        const datalist = document.getElementById('suggestions');
+
+        function debounce(func, delay) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        async function fetchSuggestions(query) {
+            if (query.length < 3) return;
+
+            try {
+                const response = await fetch(`/autocomplete?query=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error('Failed to fetch suggestions');
+                const suggestions = await response.json();
+
+                datalist.innerHTML = '';
+                suggestions.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    datalist.appendChild(option);
+                    console.log(option)
+                });
+                input.setAttribute('list', 'suggestions');
+            } catch (error) {
+                console.error('Error fetching autocomplete suggestions:', error);
+            }
+        }
+
+        input.addEventListener('input', debounce((event) => {
+            fetchSuggestions(event.target.value);
+        }, 500));
+    </script>
 
 </html>
