@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for map-plot on 2025-04-12T17:02:02+02:00
+# fly.toml app configuration file generated for map-plot on 2025-04-13T15:51:20+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -8,8 +8,6 @@ primary_region = 'ams'
 
 [build]
 
-[env]
-  PORT = '8080'
 
 [http_service]
   internal_port = 8080
@@ -23,6 +21,3 @@ primary_region = 'ams'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-
-[deploy]
-  release_command = "python -m uvicorn src.api:app --host=0.0.0.0 --port=8080"

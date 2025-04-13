@@ -1,14 +1,23 @@
-FROM python:3.13 AS builder
+FROM python:3.13-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
+
 WORKDIR /app
 
-RUN python -m venv .venv
+# Install uv
+RUN pip install uv
+
+# Copy your dependency definitions
 COPY pyproject.toml ./
-RUN .venv/bin/pip install .
-FROM python:3.13-slim
-WORKDIR /app
-COPY --from=builder /app/.venv .venv/
+
+# Install dependencies globally
+RUN uv pip install . --system
+
+# Copy the actual app code
 COPY . .
-CMD ["/app/.venv/bin/fastapi", "run"]
+
+EXPOSE 8080
+
+# Run the app
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8080"]
